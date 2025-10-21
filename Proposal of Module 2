@@ -1,1 +1,91 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+
+\title{Project Proposal: A Comparative Analysis of Loan Amortization Methods}
+\author{Adarsh Dubey \\ 202152195 \\ adubey@mun.ca}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+
+
+\section*{1. Project Title}
+\textbf{A Comparative Analysis of Loan Amortization Methods: Straight-Line vs. Declining Balance}
+
+\section*{2. Abstract}
+This project will computationally model and compare two fundamental loan amortization methods: the straight-line method and the declining balance (annuity) method. The goal is to analyze how each method affects the borrower's total interest paid, monthly payment structure, and the pace of equity building over the life of a loan.
+
+\section*{3. Research Questions}
+\subsection*{Primary Research Question}
+How do different amortization schedules structurally differ, and how does the choice of method impact the total financial cost to the borrower and the loan's repayment profile?
+
+\subsection*{Sub-questions}
+\begin{itemize}
+    \item For the same loan principal and interest rate, which method results in a lower total interest payment?
+    \item How does the monthly payment composition (interest vs. principal) evolve differently under each method?
+    \item How does the speed of equity building (loan payoff) compare between the two methods?
+\end{itemize}
+
+\section*{4. Planned Methodology}
+
+\subsection*{Mathematical Framework}
+\textbf{Declining Balance (Annuity) Method:} This is the standard method for most mortgages and car loans. The monthly payment is constant. The mathematical foundation is the present value of an annuity formula:
+\begin{equation}
+    M = P \frac{r(1+r)^n}{(1+r)^n - 1}
+\end{equation}
+where \( M \) is the monthly payment, \( P \) is the principal, \( r \) is the monthly interest rate, and \( n \) is the total number of payments.
+
+\textbf{Straight-Line Method:} The principal portion of the payment is constant each period. The total monthly payment decreases over time.
+\begin{align}
+    \text{Principal Payment} &= \frac{P}{n} \\
+    \text{Interest Payment}_t &= \text{Remaining Balance}_{t-1} \times r
+\end{align}
+
+\subsection*{Computational Implementation}
+\begin{itemize}
+    \item \textbf{Language \& Tools:} Python will be used for all calculations and visualizations.
+    \item \textbf{Key Packages:}
+    \begin{itemize}
+        \item \texttt{NumPy} and \texttt{Pandas}: For numerical calculations and creating amortization schedules as dataframes.
+        \item \texttt{Matplotlib} and \texttt{Seaborn}: For generating clear, publication-quality graphs to visualize the comparison.
+    \end{itemize}
+    \item \textbf{Process:} I will write a Python script that takes a loan's principal, interest rate, and term as inputs and generates full amortization schedules for both methods. The output will be a comparative analysis of key metrics.
+\end{itemize}
+
+\section*{5. Version Control Repository}
+\textbf{GitHub Repository URL:} \url{https://github.com/Ad862002/Math---2030-Module-2.git}
+
+\section*{6. Preliminary Bibliography}
+\begin{enumerate}
+    \item \textbf{Kellison, S. G. (2008). \textit{The Theory of Interest} (4th ed.). McGraw-Hill/Irwin.}
+    \begin{itemize}
+        \item \textit{Relevance:} A foundational textbook on the mathematics of finance, providing the rigorous theoretical background for the time value of money and annuity formulas.
+    \end{itemize}
+    
+    \item \textbf{Fabozzi, F. J. (2015). \textit{Bond Markets, Analysis, and Strategies} (9th ed.). Pearson.}
+    \begin{itemize}
+        \item \textit{Relevance:} Contains excellent sections on amortization and the mathematics of fixed-income securities, directly applicable to loans.
+    \end{itemize}
+    
+    \item \textbf{Investopedia. (n.d.). \textit{Amortization Calculator \& Formula}.}
+    \begin{itemize}
+        \item \textit{Relevance:} Provides a clear, accessible explanation of the concepts and common industry practices. (I will seek additional peer-reviewed sources for the final report).
+    \end{itemize}
+\end{enumerate}
+
+\section*{Expected Outcomes}
+\begin{itemize}
+    \item A complete Python implementation for both amortization methods
+    \item Comparative visualizations showing payment structures over time
+    \item Analysis of total interest costs and equity building patterns
+    \item A technical report discussing the mathematical foundations and practical implications
+\end{itemize}
+
+\end{document}
 
