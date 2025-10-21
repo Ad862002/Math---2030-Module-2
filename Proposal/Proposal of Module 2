@@ -79,13 +79,5 @@ where \( M \) is the monthly payment, \( P \) is the principal, \( r \) is the m
     \end{itemize}
 \end{enumerate}
 
-\section*{Expected Outcomes}
-\begin{itemize}
-    \item A complete Python implementation for both amortization methods
-    \item Comparative visualizations showing payment structures over time
-    \item Analysis of total interest costs and equity building patterns
-    \item A technical report discussing the mathematical foundations and practical implications
-\end{itemize}
-
 \end{document}
 
