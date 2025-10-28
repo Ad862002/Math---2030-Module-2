@@ -1,0 +1,160 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Set style for better looking plots
+plt.style.use('seaborn-v0_8-whitegrid')
+
+def annuity_amortization(principal, annual_rate, years):
+    monthly_rate = annual_rate / 12
+    periods = years * 12
+    payment = principal * (monthly_rate * (1 + monthly_rate)**periods) / ((1 + monthly_rate)**periods - 1)
+    return generate_annuity_schedule(principal, monthly_rate, periods, payment)
+
+def straightline_amortization(principal, annual_rate, years):
+    monthly_rate = annual_rate / 12
+    periods = years * 12
+    principal_payment = principal / periods
+    return generate_straightline_schedule(principal, monthly_rate, periods, principal_payment)
+
+def generate_annuity_schedule(principal, rate, periods, payment):
+    schedule = []
+    balance = principal
+    
+    for month in range(1, periods + 1):
+        interest = balance * rate
+        principal_pmt = payment - interest
+        balance -= principal_pmt
+        if balance < 0:
+            balance = 0
+            
+        schedule.append({
+            'month': month,
+            'payment': payment,
+            'principal': principal_pmt,
+            'interest': interest,
+            'balance': balance
+        })
+    
+    return pd.DataFrame(schedule)
+
+def generate_straightline_schedule(principal, rate, periods, principal_payment):
+    schedule = []
+    balance = principal
+    
+    for month in range(1, periods + 1):
+        interest = balance * rate
+        total_payment = principal_payment + interest
+        balance -= principal_payment
+        if balance < 0:
+            balance = 0
+            
+        schedule.append({
+            'month': month,
+            'payment': total_payment,
+            'principal': principal_payment,
+            'interest': interest,
+            'balance': balance
+        })
+    
+    return pd.DataFrame(schedule)
+
+# Generate data for a $200,000 loan at 5% for 30 years
+principal = 200000
+annual_rate = 0.05
+years = 30
+
+annuity_df = annuity_amortization(principal, annual_rate, years)
+straightline_df = straightline_amortization(principal, annual_rate, years)
+
+# Graph 1: Payment Composition Over Time
+plt.figure(figsize=(12, 8))
+
+# First 5 years for clarity
+months_to_plot = 60
+
+plt.subplot(2, 1, 1)
+plt.stackplot(annuity_df['month'][:months_to_plot], 
+              annuity_df['principal'][:months_to_plot], 
+              annuity_df['interest'][:months_to_plot],
+              labels=['Principal', 'Interest'],
+              colors=['#2E8B57', '#FF6B6B'])
+plt.title('Annuity Method: Payment Composition (First 5 Years)')
+plt.ylabel('Payment Amount ($)')
+plt.legend(loc='upper left')
+plt.grid(True, alpha=0.3)
+
+plt.subplot(2, 1, 2)
+plt.stackplot(straightline_df['month'][:months_to_plot], 
+              straightline_df['principal'][:months_to_plot], 
+              straightline_df['interest'][:months_to_plot],
+              labels=['Principal', 'Interest'],
+              colors=['#2E8B57', '#FF6B6B'])
+plt.title('Straight-Line Method: Payment Composition (First 5 Years)')
+plt.xlabel('Month')
+plt.ylabel('Payment Amount ($)')
+plt.legend(loc='upper right')
+plt.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig('payment_composition.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+# Graph 2: Remaining Balance Comparison
+plt.figure(figsize=(10, 6))
+
+# Convert months to years for x-axis
+years_plot = annuity_df['month'] / 12
+
+plt.plot(years_plot, annuity_df['balance'], 
+         label='Annuity Method', linewidth=2.5, color='#1f77b4')
+plt.plot(years_plot, straightline_df['balance'], 
+         label='Straight-Line Method', linewidth=2.5, color='#ff7f0e')
+
+plt.title('Remaining Loan Balance Over Time', fontsize=14, fontweight='bold')
+plt.xlabel('Years')
+plt.ylabel('Remaining Balance ($)')
+plt.legend()
+plt.grid(True, alpha=0.3)
+
+# Add some key milestones
+plt.axhline(y=principal/2, color='red', linestyle='--', alpha=0.7, label='50% Paid')
+plt.axvline(x=15, color='green', linestyle='--', alpha=0.7, label='15 Years')
+
+plt.legend()
+plt.savefig('balance_comparison.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+# Graph 3: Total Payment Comparison (First 10 years)
+plt.figure(figsize=(10, 6))
+
+months_10_years = 120
+plt.plot(straightline_df['month'][:months_10_years], 
+         straightline_df['payment'][:months_10_years], 
+         label='Straight-Line Payment', linewidth=2, color='#ff7f0e')
+plt.axhline(y=annuity_df['payment'].iloc[0], 
+            label='Annuity Payment', linewidth=2, color='#1f77b4', linestyle='-')
+
+plt.title('Monthly Payment Comparison (First 10 Years)', fontsize=14, fontweight='bold')
+plt.xlabel('Month')
+plt.ylabel('Monthly Payment ($)')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.savefig('payment_comparison.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+# Print summary statistics
+print("=== LOAN AMORTIZATION SUMMARY ===")
+print(f"Loan: ${principal:,.2f} at {annual_rate*100}% for {years} years")
+print(f"\nAnnuity Method:")
+print(f"  Monthly Payment: ${annuity_df['payment'].iloc[0]:,.2f}")
+print(f"  Total Interest: ${annuity_df['interest'].sum():,.2f}")
+
+print(f"\nStraight-Line Method:")
+print(f"  Initial Payment: ${straightline_df['payment'].iloc[0]:,.2f}")
+print(f"  Final Payment: ${straightline_df['payment'].iloc[-1]:,.2f}")
+print(f"  Total Interest: ${straightline_df['interest'].sum():,.2f}")
+
+interest_savings = annuity_df['interest'].sum() - straightline_df['interest'].sum()
+savings_percent = (interest_savings / annuity_df['interest'].sum()) * 100
+print(f"\nStraight-Line Savings: ${interest_savings:,.2f} ({savings_percent:.1f}%)")
