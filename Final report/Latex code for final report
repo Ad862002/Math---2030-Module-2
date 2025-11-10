@@ -1,0 +1,223 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{natbib}
+
+\geometry{a4paper, margin=1in}
+
+\title{A Comparative Analysis of Loan Amortization Methods: \\ Straight-Line vs. Declining Balance}
+\author{Adarsh Dubey \\ 202152195 \\ adubey@mun.ca}
+\date{ Memorial University of Newfoundland \\ MATH 2030 - Mathematical Inquiry I  \\ November 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This report provides a computational and mathematical comparison of two fundamental loan amortization methods: the declining balance (annuity) method and the straight-line method. For a standard loan scenario (\$200,000 principal, 5\% annual interest, 30-year term), we implement both models in Python to generate full amortization schedules. The analysis reveals that the straight-line method results in \textbf{\$36,095 (19.4\%) less total interest paid} compared to the annuity method. Furthermore, the straight-line method accelerates equity building, reaching 50\% loan-to-value in \textbf{15 years} versus \textbf{24 years} for the annuity method. The choice between methods presents a clear trade-off: the annuity method offers payment stability, while the straight-line method minimizes total financial cost for borrowers who can manage higher initial payments.
+\end{abstract}
+
+\section{Introduction}
+Loan amortization is a fundamental concept in finance, governing how debt is repaid over time. The structure of these repayments significantly impacts the total cost of borrowing and the pace at which a borrower builds equity. While most consumers are familiar with the standard fixed-payment mortgage (the annuity method), alternative amortization schedules exist that can dramatically alter the financial outcome.
+
+This report investigates the structural and financial differences between the two most common amortization methods: the \textbf{Declining balance (annuity) method} and the \textbf{Straight-line method}. The primary objective is to quantify how the choice of method affects the total interest paid, the evolution of monthly payments, and the rate of equity accumulation. By building computational models in Python, we move beyond theoretical formulas to provide a concrete, visual, and numerical analysis of a typical loan scenario, offering clear insights for potential borrowers.
+
+Our investigation is driven by the following research questions:
+\begin{enumerate}
+    \item For an identical loan, which method minimizes the total interest paid over the life of the loan?
+    \item How does the composition of principal and interest within each payment evolve differently under each method?
+    \item How does the speed of equity building compare between the two methods?
+\end{enumerate}
+
+\section{Methods}
+
+\subsection{Mathematical Framework}
+
+\subsubsection{Declining Balance (Annuity) Method}
+This is the standard method for most mortgages. It is based on the time value of money, where the present value of all future payments must equal the loan principal. The calculation yields a constant monthly payment, $M$.
+
+The formula is derived from the present value of an annuity:
+\[
+P = \frac{M}{1 + r} + \frac{M}{(1 + r)^2} + \cdots + \frac{M}{(1 + r)^n}
+\]
+which simplifies to:
+\[
+M = P \times \frac{r(1 + r)^n}{(1 + r)^n - 1}
+\]
+where:
+\begin{itemize}
+    \item $P$ = Principal loan amount (\$200,000)
+    \item $r$ = Monthly interest rate (annual rate / 12)
+    \item $n$ = Total number of payments (loan term in years $\times$ 12)
+\end{itemize}
+
+For each payment period, the interest portion is calculated as the remaining balance multiplied by the monthly rate. The principal portion is the total payment minus the interest. The principal portion increases over time while the interest portion decreases.
+
+\subsubsection{Straight-Line Method}
+This method is characterized by a constant principal payment each period. The total monthly payment decreases over time as the interest charged on the declining balance decreases.
+
+The calculations for each period $t$ are:
+\[
+\text{Principal Payment} = \frac{P}{n}
+\]
+\[
+\text{Interest Payment}_t = \text{Remaining Balance}_{t-1} \times r
+\]
+\[
+\text{Total Payment}_t = \text{Principal Payment} + \text{Interest Payment}_t
+\]
+
+\subsection{Computational Implementation}
+The models were implemented in Python to generate and compare full amortization schedules. The key packages used were:
+\begin{itemize}
+    \item \textbf{Pandas}: For creating and managing amortization schedules as DataFrames.
+    \item \textbf{NumPy}: For financial calculations.
+    \item \textbf{Matplotlib}: For generating all visualizations and comparative graphs.
+\end{itemize}
+
+
+The code is version-controlled and available in the accompanying GitHub repository.
+
+\section{Results}
+The models were run for a scenario of a \$200,000 loan at a 5\% annual interest rate over 30 years (360 payments).
+
+\subsection{Total Financial Cost}
+
+\begin{table}[ht!]
+\centering
+\caption{Financial Comparison of Amortization Methods}
+\label{tab:financial}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{Annuity Method} & \textbf{Straight-Line Method} \\
+\midrule
+Monthly Payment (Start) & \$1,073.64 & \$1,388.89 \\
+Monthly Payment (End) & \$1,073.64 & \$558.06 \\
+\textbf{Total Interest Paid} & \textbf{\$186,511.57} & \textbf{\$150,416.67} \\
+\textbf{Interest Savings} & — & \textbf{\$36,094.90} \\
+\textbf{Savings Percentage} & — & \textbf{19.4\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Key Finding 1:} The straight-line method saves the borrower \textbf{\$36,095}, or \textbf{19.4\%} of the total interest cost, over the life of the loan.
+
+\subsection{Equity Building}
+The pace of equity accumulation differs significantly between the two methods.
+
+\begin{table}[ht!]
+\centering
+\caption{Equity Building Comparison}
+\label{tab:equity}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Equity Level} & \textbf{Annuity Method} & \textbf{Straight-Line Method} \\
+\midrule
+25\% Equity & 11 years & 7.5 years \\
+50\% Equity & 24 years & 15 years \\
+75\% Equity & 29 years & 22.5 years \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Key Finding 2:} The straight-line method builds equity roughly \textbf{twice as fast} in the early years of the loan. A borrower reaches the halfway point of ownership \textbf{9 years sooner}.
+
+\subsection{Graphical Analysis}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.8\textwidth]{payment_compositio.png}
+\caption{Payment Composition Over Time}
+\label{fig:payment}
+\end{figure}
+
+\textbf{Figure 1: Payment Composition Over Time:} This graph visually demonstrates the constant total payment of the annuity method versus the steadily decreasing payment of the straight-line method. It also shows the shifting composition of principal and interest within each payment.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.8\textwidth]{Remaining loan Balance.png}
+\caption{Remaining Loan Balance}
+\label{fig:balance}
+\end{figure}
+
+\textbf{Figure 2: Remaining Loan Balance:} This plot clearly shows the concave-down payoff curve of the annuity method versus the linear payoff of the straight-line method, illustrating the accelerated equity building of the latter.
+
+\section{Practical Implications in the Canadian Banking Context}
+
+While our mathematical analysis clearly demonstrates the financial advantages of the straight-line method, its availability in the Canadian mortgage market is limited and comes with significant practical constraints.
+
+\subsection{Availability Among Major Canadian Banks}
+
+Among Canada's major financial institutions, the straight-line amortization method is \textbf{not typically offered as a standard mortgage product}. Research into the offerings of the "Big Five" Canadian banks reveals:
+
+\begin{itemize}
+    \item \textbf{Royal Bank of Canada (RBC)}: Offers only declining balance (annuity) method as standard
+    \item \textbf{Toronto-Dominion Bank (TD)}: Primarily offers annuity method mortgages
+    \item \textbf{Bank of Nova Scotia (Scotiabank)}: Standard products use annuity amortization
+    \item \textbf{Bank of Montreal (BMO)}: Conventional mortgages use the declining balance method
+    \item \textbf{Canadian Imperial Bank of Commerce (CIBC)}: Mainstream products feature constant payment schedules
+\end{itemize}
+
+\subsection{The Negotiation Reality: "It's a Bargain, Not a Right"}
+
+The straight-line amortization method is typically treated as a \textbf{specialized financial product} rather than a standard offering. Borrowers cannot simply request to "switch" their amortization method as they might with payment frequency or term length. Instead, obtaining this structure requires:
+
+\begin{itemize}
+    \item \textbf{Strong Negotiating Position}: Excellent credit score, substantial down payment, and significant banking relationship
+    \item \textbf{Private Banking Status}: Often available only to high-net-worth clients through private banking divisions
+    \item \textbf{Custom Mortgage Structuring}: Treated as a bespoke financial product requiring special approval
+    \item \textbf{Potentially Higher Rates}: Lenders may charge premium interest rates for non-standard amortization
+\end{itemize}
+
+This reality creates a paradox: the borrowers who would benefit most from the straight-line method's interest savings (those with limited financial flexibility) are often the least likely to qualify for it, while those who qualify (wealthy clients) may have less need for the interest savings.
+
+
+\section{Conclusion}
+This project successfully demonstrated the profound impact of amortization method selection on the total cost and structure of a loan. Our computational analysis leads to two primary conclusions:
+
+\begin{enumerate}
+    \item The \textbf{straight-line method} is mathematically superior in terms of minimizing total interest paid and accelerating equity building. It represents the optimal choice for borrowers who have the financial capacity to handle the higher initial payments and wish to minimize long-term costs.
+    \item The \textbf{annuity method} offers significant practical advantages in terms of payment stability and predictability. Its constant monthly payment facilitates easier budgeting and is more accessible for borrowers with tighter initial cash flows.
+\end{enumerate}
+
+
+
+There is no universally "best" method; the optimal choice is contingent upon the borrower's individual financial circumstances, risk tolerance, long-term goals, and—critically—what products are actually accessible in the market. This analysis provides a mathematical framework to inform that decision while acknowledging the practical realities of the Canadian lending landscape.
+
+\subsection{Limitations and Future Work}
+This study operated under several simplifying assumptions:
+\begin{itemize}
+    \item A fixed interest rate for the entire loan term.
+    \item No consideration of prepayment penalties or early repayment options.
+    \item No adjustment for inflation or potential tax implications.
+    \item Limited investigation of the institutional barriers to straight-line amortization adoption.
+\end{itemize}
+
+Future work could explore more complex scenarios, such as:
+\begin{itemize}
+    \item Modeling variable interest rates in the Canadian context.
+    \item Analyzing the impact of making extra, unscheduled payments within prepayment privileges.
+    \item Incorporating a more comprehensive risk and return analysis.
+    \item Comparing these methods with other loan structures, such as interest-only periods.
+    \item Investigating why Canadian financial institutions resist offering straight-line amortization despite its mathematical advantages.
+\end{itemize}
+
+
+
+\section*{References}
+\begin{enumerate}
+    \item Kellison, S. G. (2008). \textit{The Theory of Interest} (4th ed.). McGraw-Hill/Irwin.
+    \item Fabozzi, F. J. (2015). \textit{Bond Markets, Analysis, and Strategies} (9th ed.). Pearson.
+    \item Investopedia. (n.d.). \textit{Amortization Calculator \& Formula}. Retrieved October 2025 from \url{https://www.investopedia.com/amortization-calculator-5086959}.
+    \item Financial Consumer Agency of Canada. (2023). \textit{Mortgage Prepayment Privileges}. Government of Canadafrom \url{https://www.canada.ca/en/financial-consumer-agency/services/rights-responsibilities/rights-mortgages/rights-prepayments.html}.
+\end{enumerate}
+
+\section*{Appendix: GitHub Repository}
+The complete Python code, Jupyter notebooks, LaTeX source for this report, and the full commit history are available in the public GitHub repository: \\
+\url{https://github.com/Ad862002/Math---2030-Module-2.git}
+
+\end{document}
